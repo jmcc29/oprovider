@@ -2,16 +2,15 @@ import {
   Controller,
   Get,
   Query,
-  Redirect,
   BadRequestException,
   Res,
 } from '@nestjs/common';
 import { v4 as Uuid } from 'uuid';
 
-const store = new Map<string, { ci: string; birthdate: string }>();
+const store = new Map<string, { ci: string; birthdate: string; nonce?: string }>();
 
 export const AuthorizationCodeStore = {
-  set(code: string, data: { ci: string; birthdate: string }) {
+  set(code: string, data: { ci: string; birthdate: string ; nonce?: string }) {
     store.set(code, data);
   },
   get(code: string) {
@@ -36,6 +35,7 @@ interface AuthorizeQuery {
 export class AuthorizationController {
   @Get('authorize')
   async authorize(@Query() query: any, @Res() res: any) {
+    console.log(query);
     if (!query.ci || !query.birthdate) {
       const html = `
       <html>
@@ -47,6 +47,7 @@ export class AuthorizationController {
             <input type="hidden" name="scope" value="${query.scope || ''}" />
             <input type="hidden" name="response_type" value="${query.response_type || ''}" />
             <input type="hidden" name="state" value="${query.state || ''}" />
+            <input type="hidden" name="nonce" value="${query.nonce || ''}" />
             <label>CI: <input name="ci" /></label><br/>
             <label>Fecha de nacimiento: <input name="birthdate" /></label><br/>
             <button type="submit">Ingresar</button>
@@ -84,7 +85,7 @@ export class AuthorizationController {
     }
 
     const code = Uuid();
-    AuthorizationCodeStore.set(code, { ci, birthdate });
+    AuthorizationCodeStore.set(code, { ci, birthdate, nonce: query.nonce });
 
     const url = new URL(redirect_uri);
     url.searchParams.set('code', code);

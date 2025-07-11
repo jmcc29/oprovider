@@ -10,10 +10,10 @@ import { Request } from 'express';
 import * as jwt from 'jsonwebtoken';
 import * as fs from 'fs';
 import * as path from 'path';
+import { envs } from 'src/config/envs';
 
 @Controller()
 export class TokenController {
-  // ... tus otros endpoints
 
   @Post('token')
   async token(@Req() req: Request) {
@@ -51,13 +51,14 @@ export class TokenController {
     // Simular un sub y claims mínimas
     const payload = {
       sub: authData.ci, // o un UUID real si lo tienes
-      name: 'Juan Pérez', // opcional
+      // name: 'Juan Pérez', // opcional
       birthdate: authData.birthdate,
       ci: authData.ci,
-      iss: 'http://localhost:3000',
+      iss: `http://${envs.host}:${envs.port}`,
       aud: client_id,
       iat: Math.floor(Date.now() / 1000),
       exp: Math.floor(Date.now() / 1000) + 300, // 5 minutos
+      nonce: authData.nonce,
     };
 
     // 🔐 Firmar con clave privada (RSA)
