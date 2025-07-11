@@ -17,7 +17,7 @@ export class WellKnownController {
       id_token_signing_alg_values_supported: ['RS256'],
       scopes_supported: ['openid'],
       token_endpoint_auth_methods_supported: ['client_secret_post'],
-      claims_supported: ['sub', 'name', 'birthdate', 'ci'],
+      claims_supported: ['sub', 'birthdate', 'ci'],
     };
   }
 }

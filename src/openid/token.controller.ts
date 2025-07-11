@@ -22,11 +22,22 @@ export class TokenController {
       code,
       redirect_uri,
       client_id,
-      // client_secret (opcional)
+      client_secret, //TODO cambiar
     } = req.body;
 
     if (grant_type !== 'authorization_code') {
       throw new BadRequestException('Invalid grant_type');
+    }
+
+    // TODO Simulación: validar client_id y client_secret
+    const expectedClientId = 'my-client';
+    const expectedClientSecret = 'dummy-secret';
+
+    if (
+      client_id !== expectedClientId ||
+      client_secret !== expectedClientSecret
+    ) {
+      throw new BadRequestException('Invalid client credentials');
     }
 
     const authData = AuthorizationCodeStore.get(code);
@@ -50,10 +61,17 @@ export class TokenController {
     };
 
     // 🔐 Firmar con clave privada (RSA)
-    const privateKey = fs.readFileSync(path.join(__dirname, '../../keys/private.pem'), 'utf8');
-    const id_token = jwt.sign(payload, privateKey, { algorithm: 'RS256' });
+    const privateKey = fs.readFileSync(
+      path.join(__dirname, '../../keys/private.pem'),
+      'utf8',
+    );
+    const id_token = jwt.sign(
+      payload,
+      privateKey,
+      { algorithm: 'RS256', keyid: 'default-key' }, //TODO firma con kid en jwks.json
+    );
 
-    // (opcional) también puedes generar access_token aquí
+    // TODO (opcional) también puedes generar access_token aquí
 
     return {
       access_token: 'dummy-token', // luego implementamos real

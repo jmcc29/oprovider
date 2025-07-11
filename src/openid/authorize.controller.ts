@@ -4,6 +4,7 @@ import {
   Query,
   Redirect,
   BadRequestException,
+  Res,
 } from '@nestjs/common';
 import { v4 as Uuid } from 'uuid';
 
@@ -34,8 +35,29 @@ interface AuthorizeQuery {
 @Controller()
 export class AuthorizationController {
   @Get('authorize')
-  @Redirect()
-  async authorize(@Query() query: AuthorizeQuery) {
+  async authorize(@Query() query: any, @Res() res: any) {
+    if (!query.ci || !query.birthdate) {
+      const html = `
+      <html>
+        <body>
+          <h2>Login con CI y Fecha de Nacimiento</h2>
+          <form method="GET" action="/authorize">
+            <input type="hidden" name="client_id" value="${query.client_id || ''}" />
+            <input type="hidden" name="redirect_uri" value="${query.redirect_uri || ''}" />
+            <input type="hidden" name="scope" value="${query.scope || ''}" />
+            <input type="hidden" name="response_type" value="${query.response_type || ''}" />
+            <input type="hidden" name="state" value="${query.state || ''}" />
+            <label>CI: <input name="ci" /></label><br/>
+            <label>Fecha de nacimiento: <input name="birthdate" /></label><br/>
+            <button type="submit">Ingresar</button>
+          </form>
+        </body>
+      </html>
+    `;
+    console.log(html);
+      return res.send(html);
+    }
+
     const {
       response_type,
       client_id,
@@ -68,6 +90,6 @@ export class AuthorizationController {
     url.searchParams.set('code', code);
     if (state) url.searchParams.set('state', state);
 
-    return { url: url.toString() };
+    return res.redirect(url.toString());
   }
 }
