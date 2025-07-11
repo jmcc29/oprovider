@@ -5,7 +5,7 @@ import {
   Redirect,
   BadRequestException,
 } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as Uuid } from 'uuid';
 
 const store = new Map<string, { ci: string; birthdate: string }>();
 
@@ -61,7 +61,7 @@ export class AuthorizationController {
       throw new BadRequestException('Usuario no válido');
     }
 
-    const code = uuidv4();
+    const code = Uuid();
     AuthorizationCodeStore.set(code, { ci, birthdate });
 
     const url = new URL(redirect_uri);
