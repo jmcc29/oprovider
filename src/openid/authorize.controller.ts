@@ -7,10 +7,13 @@ import {
 } from '@nestjs/common';
 import { v4 as Uuid } from 'uuid';
 
-const store = new Map<string, { ci: string; birthdate: string; nonce?: string }>();
+const store = new Map<
+  string,
+  { ci: string; birthdate: string; nonce?: string }
+>();
 
 export const AuthorizationCodeStore = {
-  set(code: string, data: { ci: string; birthdate: string ; nonce?: string }) {
+  set(code: string, data: { ci: string; birthdate: string; nonce?: string }) {
     store.set(code, data);
   },
   get(code: string) {
@@ -21,16 +24,6 @@ export const AuthorizationCodeStore = {
   },
 };
 
-interface AuthorizeQuery {
-  response_type: string;
-  client_id: string;
-  redirect_uri: string;
-  scope: string;
-  state?: string;
-  ci: string;
-  birthdate: string;
-}
-
 @Controller()
 export class AuthorizationController {
   @Get('authorize')
@@ -38,24 +31,24 @@ export class AuthorizationController {
     console.log(query);
     if (!query.ci || !query.birthdate) {
       const html = `
-      <html>
-        <body>
-          <h2>Login con CI y Fecha de Nacimiento</h2>
-          <form method="GET" action="/authorize">
-            <input type="hidden" name="client_id" value="${query.client_id || ''}" />
-            <input type="hidden" name="redirect_uri" value="${query.redirect_uri || ''}" />
-            <input type="hidden" name="scope" value="${query.scope || ''}" />
-            <input type="hidden" name="response_type" value="${query.response_type || ''}" />
-            <input type="hidden" name="state" value="${query.state || ''}" />
-            <input type="hidden" name="nonce" value="${query.nonce || ''}" />
-            <label>CI: <input name="ci" /></label><br/>
-            <label>Fecha de nacimiento: <input name="birthdate" /></label><br/>
-            <button type="submit">Ingresar</button>
-          </form>
-        </body>
-      </html>
-    `;
-    console.log(html);
+        <html>
+          <body>
+            <h2>Login con CI y Fecha de Nacimiento</h2>
+            <form method="GET" action="/authorize">
+              <input type="hidden" name="client_id" value="${query.client_id || ''}" />
+              <input type="hidden" name="redirect_uri" value="${query.redirect_uri || ''}" />
+              <input type="hidden" name="scope" value="${query.scope || ''}" />
+              <input type="hidden" name="response_type" value="${query.response_type || ''}" />
+              <input type="hidden" name="state" value="${query.state || ''}" />
+              <input type="hidden" name="nonce" value="${query.nonce || ''}" />
+              <label>CI: <input name="ci" /></label><br/>
+              <label>Fecha de nacimiento: <input name="birthdate" /></label><br/>
+              <button type="submit">Ingresar</button>
+            </form>
+          </body>
+        </html>
+      `;
+      console.log(html);
       return res.send(html);
     }
 

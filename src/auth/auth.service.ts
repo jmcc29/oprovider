@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from '../users/entities/user.entity';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -10,6 +10,9 @@ export class AuthService {
     private readonly userRepo: Repository<User>,
   ) {}
 
+  async create(createUserDto: any) {
+    return this.userRepo.save(createUserDto);
+  }
   async verifyCiAndBirthdate(ci: string, birthdate: Date) {
     const formattedDate = birthdate.toISOString().split('T')[0]; // "YYYY-MM-DD"
 

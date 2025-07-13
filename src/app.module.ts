@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { OpenidModule } from './openid/openid.module';
 import { envs } from './config/envs';
@@ -19,7 +18,6 @@ import { envs } from './config/envs';
       autoLoadEntities: true,
       synchronize: true
     }),
-    UsersModule,
     AuthModule,
     OpenidModule
   ],
