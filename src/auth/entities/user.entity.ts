@@ -20,7 +20,7 @@ export class User {
   mother_lastname: string;
 
   @Column({ type: 'date' })
-  birthdate: Date;
+  birthdate: string;
 
   @Column({ nullable: true })
   celphone: string;
@@ -31,6 +31,6 @@ export class User {
   })
   roles: string[];
 
-  @Column('bool', { nullable: true })
+  @Column('bool', { default: true })
   is_active: boolean;
 }

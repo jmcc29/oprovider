@@ -1,5 +1,4 @@
 import { IsString, IsDateString, IsOptional } from 'class-validator';
-import { Type } from 'class-transformer';
 export class CreateUserDto {
   @IsString()
   ci: string;
@@ -18,8 +17,7 @@ export class CreateUserDto {
   mother_lastname: string;
 
   @IsDateString()
-  @Type(() => Date)
-  birthdate: Date;
+  birthdate: string;
 
   @IsString()
   @IsOptional()
