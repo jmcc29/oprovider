@@ -1,4 +1,4 @@
-import { CreateUserDto, IdentifyDto } from './dto';
+import { CreateUserDto, IdentifyDto, LoginUserDto } from './dto';
 import { Controller, Get, Post, Body, NotFoundException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
@@ -9,6 +9,11 @@ export class AuthController {
   @Post('register')
   async create(@Body() createUserDto: CreateUserDto) {
     return this.authService.create(createUserDto);
+  }
+
+  @Post('login')
+  async login(@Body() loginUserDto: LoginUserDto) {
+    return this.authService.login(loginUserDto);
   }
   
   @Post('identify')
