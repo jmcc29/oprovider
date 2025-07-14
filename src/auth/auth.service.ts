@@ -1,14 +1,22 @@
-import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
-import { LoginUserDto } from './dto';
+import { CreateUserDto, LoginUserDto } from './dto';
+import { JwtPayload } from './interfaces/jwt-payload.interfaces';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepo: Repository<User>,
+    private readonly jwtService: JwtService,
   ) {}
 
   private handleDBErrors(error: any): never {
@@ -16,15 +24,24 @@ export class AuthService {
       throw new BadRequestException(error.detail);
     }
     console.log(error);
-    throw new InternalServerErrorException('Unexpected error, please check server logs');
+    throw new InternalServerErrorException(
+      'Unexpected error, please check server logs',
+    );
   }
-  
-  async create(createUserDto: any) {
+
+  private getJWTToken(payload: JwtPayload): string {
+    const token = this.jwtService.sign(payload);
+    return token;
+  }
+
+  async create(createUserDto: CreateUserDto) {
     try {
       const user = this.userRepo.create(createUserDto);
       await this.userRepo.save(user);
-      return user;
-      //TODO: Retornar un token JWT
+      return {
+        ...user,
+        token: this.getJWTToken({ ci: user.ci }),
+      };
     } catch (error) {
       console.log(this.handleDBErrors(error));
     }
@@ -35,20 +52,22 @@ export class AuthService {
     const user = await this.userRepo.findOne({
       where: {
         ci,
-        birthdate: birthdate
+        birthdate: birthdate,
       },
       select: {
         ci: true,
-        birthdate: true
+        birthdate: true,
       },
-    })
+    });
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
-    return user;
-    //TODO Retornar un token JWT
+    return {
+      ...user,
+      token: this.getJWTToken({ ci: user.ci }),
+    };
   }
-  
+
   async verifyCiAndBirthdate(ci: string, birthdate: Date) {
     const formattedDate = birthdate.toISOString().split('T')[0]; // "YYYY-MM-DD"
 
