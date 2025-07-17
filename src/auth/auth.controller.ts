@@ -12,10 +12,11 @@ import {
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from './entities/user.entity';
-import { GetUser, RawHeaders } from './decorators';
+import { GetUser, RawHeaders, RoleProtected } from './decorators';
 import { Headers } from '@nestjs/common';
 import { IncomingHttpHeaders } from 'http';
-import { UserRoleGuard } from './guards/user-role/user-role.guard';
+import { UserRoleGuard } from './guards/user-role.guard';
+import { ValidRoles } from './interfaces';
 
 @Controller('auth')
 export class AuthController {
@@ -46,7 +47,7 @@ export class AuthController {
       message: 'You are authenticated',
       user,
       ci,
-      rawHeaders, 
+      rawHeaders,
       headers, // Optional: if you want to access headers
     };
   }
@@ -58,6 +59,16 @@ export class AuthController {
     @GetUser() user: User,
   ) {
     // console.log(req)
+    return {
+      ok: true,
+      user,
+    };
+  }
+
+  @Get('private3')
+  @RoleProtected(ValidRoles.superUser, ValidRoles.admin)
+  @UseGuards(AuthGuard(), UserRoleGuard)
+  privateRoute2(@GetUser() user: User) {
     return {
       ok: true,
       user,

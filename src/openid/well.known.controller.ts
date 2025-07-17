@@ -8,10 +8,10 @@ export class WellKnownController {
 
     return {
       issuer,
-      authorization_endpoint: `${issuer}/authorize`,
-      token_endpoint: `${issuer}/token`,
-      userinfo_endpoint: `${issuer}/userinfo`,
-      jwks_uri: `${issuer}/jwks.json`,
+      authorization_endpoint: `${issuer}/api/authorize`,
+      token_endpoint: `${issuer}/api/token`,
+      userinfo_endpoint: `${issuer}/api/userinfo`,
+      jwks_uri: `${issuer}/api/jwks.json`,
       response_types_supported: ['code'],
       subject_types_supported: ['public'],
       id_token_signing_alg_values_supported: ['RS256'],

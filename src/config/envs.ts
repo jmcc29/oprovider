@@ -1,7 +1,6 @@
 import 'dotenv/config';
 
 import * as joi from 'joi';
-import { env } from 'process';
 
 interface EnvVars {
   DB_NAME: string;
