@@ -1,6 +1,7 @@
 import { CreateUserDto, IdentifyDto, LoginUserDto } from './dto';
-import { Controller, Get, Post, Body, NotFoundException } from '@nestjs/common';
+import { Controller, Post, Body, NotFoundException, Get, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')
 export class AuthController {
@@ -14,6 +15,12 @@ export class AuthController {
   @Post('login')
   async login(@Body() loginUserDto: LoginUserDto) {
     return this.authService.login(loginUserDto);
+  }
+
+  @Get('private')
+  @UseGuards( AuthGuard('jwt') )
+  async testingPrivateRoute() {
+    return 'This is a private route, you are authenticated!'; 
   }
   
   @Post('identify')
