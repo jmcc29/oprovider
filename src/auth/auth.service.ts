@@ -40,7 +40,7 @@ export class AuthService {
       await this.userRepo.save(user);
       return {
         ...user,
-        token: this.getJWTToken({ ci: user.ci }),
+        token: this.getJWTToken({ id: user.id }),
       };
     } catch (error) {
       console.log(this.handleDBErrors(error));
@@ -55,6 +55,7 @@ export class AuthService {
         birthdate: birthdate,
       },
       select: {
+        id: true,
         ci: true,
         birthdate: true,
       },
@@ -64,7 +65,7 @@ export class AuthService {
     }
     return {
       ...user,
-      token: this.getJWTToken({ ci: user.ci }),
+      token: this.getJWTToken({ id: user.id }),
     };
   }
 

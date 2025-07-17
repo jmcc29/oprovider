@@ -1,4 +1,3 @@
-import { Type } from 'class-transformer';
 import { IsString, IsDateString, IsOptional } from 'class-validator';
 export class LoginUserDto {
   @IsString()
