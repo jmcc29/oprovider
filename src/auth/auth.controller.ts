@@ -1,7 +1,19 @@
 import { CreateUserDto, IdentifyDto, LoginUserDto } from './dto';
-import { Controller, Post, Body, NotFoundException, Get, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  NotFoundException,
+  Get,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
+import { User } from './entities/user.entity';
+import { GetUser, RawHeaders } from './decorators';
+import { Headers } from '@nestjs/common';
+import { IncomingHttpHeaders } from 'http';
 
 @Controller('auth')
 export class AuthController {
@@ -18,11 +30,25 @@ export class AuthController {
   }
 
   @Get('private')
-  @UseGuards( AuthGuard('jwt') )
-  async testingPrivateRoute() {
-    return 'This is a private route, you are authenticated!'; 
+  @UseGuards(AuthGuard('jwt'))
+  testingPrivateRoute(
+    // @Req() req: Request,
+    @GetUser() user: User,
+    @GetUser('ci') ci: string,
+    @RawHeaders() rawHeaders: string[],
+    @Headers() headers: IncomingHttpHeaders, // Optional: if you want to access headers
+  ) {
+    // console.log(req)
+    return {
+      ok: true,
+      message: 'You are authenticated',
+      user,
+      ci,
+      rawHeaders, 
+      headers, // Optional: if you want to access headers
+    };
   }
-  
+
   @Post('identify')
   async identify(@Body() dto: IdentifyDto) {
     const birthdate = new Date(dto.birthdate);
