@@ -7,6 +7,7 @@ import {
   Get,
   UseGuards,
   Req,
+  SetMetadata,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -14,6 +15,7 @@ import { User } from './entities/user.entity';
 import { GetUser, RawHeaders } from './decorators';
 import { Headers } from '@nestjs/common';
 import { IncomingHttpHeaders } from 'http';
+import { UserRoleGuard } from './guards/user-role/user-role.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -46,6 +48,19 @@ export class AuthController {
       ci,
       rawHeaders, 
       headers, // Optional: if you want to access headers
+    };
+  }
+  @Get('private2')
+  @SetMetadata('roles', ['admin', 'super-user'])
+  @UseGuards(AuthGuard(), UserRoleGuard)
+  testingPrivate2Route(
+    // @Req() req: Request,
+    @GetUser() user: User,
+  ) {
+    // console.log(req)
+    return {
+      ok: true,
+      user,
     };
   }
 
