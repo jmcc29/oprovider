@@ -12,7 +12,7 @@ import {
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from './entities/user.entity';
-import { GetUser, RawHeaders, RoleProtected } from './decorators';
+import { GetUser, RawHeaders, RoleProtected, Auth } from './decorators';
 import { Headers } from '@nestjs/common';
 import { IncomingHttpHeaders } from 'http';
 import { UserRoleGuard } from './guards/user-role.guard';
@@ -47,12 +47,13 @@ export class AuthController {
       message: 'You are authenticated',
       user,
       ci,
-      rawHeaders,
+      rawHeaders, 
       headers, // Optional: if you want to access headers
     };
   }
+  // @SetMetadata('roles', ['admin', 'super-user'])
   @Get('private2')
-  @SetMetadata('roles', ['admin', 'super-user'])
+  @RoleProtected(ValidRoles.superUser, ValidRoles.admin)
   @UseGuards(AuthGuard(), UserRoleGuard)
   testingPrivate2Route(
     // @Req() req: Request,
@@ -66,9 +67,12 @@ export class AuthController {
   }
 
   @Get('private3')
-  @RoleProtected(ValidRoles.superUser, ValidRoles.admin)
-  @UseGuards(AuthGuard(), UserRoleGuard)
-  privateRoute2(@GetUser() user: User) {
+  @Auth(ValidRoles.admin, ValidRoles.superUser)
+  testingPrivate3Route(
+    // @Req() req: Request,
+    @GetUser() user: User,
+  ) {
+    // console.log(req)
     return {
       ok: true,
       user,
