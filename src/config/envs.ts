@@ -11,6 +11,10 @@ interface EnvVars {
   PORT: number;
   HOST_API: string;
   JWT_SECRET: string;
+  KEYCLOAK_URL: string;
+  KEYCLOAK_REALM: string;
+  KEYCLOAK_CLIENT_ID: string;
+  KEYCLOAK_CLIENT_SECRET: string;
 }
 
 const envsSchema = joi
@@ -36,6 +40,12 @@ export const envs = {
     port: envVars.DB_PORT,
     username: envVars.DB_USERNAME,
     password: envVars.DB_PASSWORD,
+  },
+  keycloak: {
+    url: envVars.KEYCLOAK_URL,
+    realm: envVars.KEYCLOAK_REALM,
+    clientId: envVars.KEYCLOAK_CLIENT_ID,
+    clientSecret: envVars.KEYCLOAK_CLIENT_SECRET,
   },
   jwtSecret: envVars.JWT_SECRET,
 };
