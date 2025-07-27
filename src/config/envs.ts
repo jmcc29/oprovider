@@ -8,6 +8,10 @@ interface EnvVars {
   DB_PORT: number;
   DB_USERNAME: string;
   DB_PASSWORD: string;
+  KEYCLOAK_URL: string;
+  KEYCLOAK_REALM: string;
+  KEYCLOAK_CLIENT_ID: string;
+  KEYCLOAK_CLIENT_SECRET: string;
   PORT: number;
   HOST_API: string;
   JWT_SECRET: string;
@@ -30,12 +34,19 @@ const envVars: EnvVars = value;
 export const envs = {
   host: envVars.HOST_API,
   port: envVars.PORT,
+  url: `http://${envVars.HOST_API}:${envVars.PORT}`,
   db: {
     name: envVars.DB_NAME,
     host: envVars.DB_HOST,
     port: envVars.DB_PORT,
     username: envVars.DB_USERNAME,
     password: envVars.DB_PASSWORD,
+  },
+  keycloak: {
+    url: envVars.KEYCLOAK_URL,
+    realm: envVars.KEYCLOAK_REALM,
+    clientId: envVars.KEYCLOAK_CLIENT_ID,
+    clientSecret: envVars.KEYCLOAK_CLIENT_SECRET,
   },
   jwtSecret: envVars.JWT_SECRET,
 };

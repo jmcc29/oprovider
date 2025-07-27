@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { OpenidModule } from './openid/openid.module';
 import { envs } from './config/envs';
+import { LdapAuthModule } from './ldap-auth/ldap-auth.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { envs } from './config/envs';
       synchronize: true
     }),
     AuthModule,
-    OpenidModule
+    OpenidModule,
+    LdapAuthModule
   ],
   controllers: [],
   providers: [],

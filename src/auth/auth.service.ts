@@ -63,11 +63,37 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException('User not found');
     }
+    const token = this.getJWTToken({ id: user.id });
     return {
       ...user,
-      token: this.getJWTToken({ id: user.id }),
+      token,
     };
   }
+  
+  // async exchangeTokenWithKeycloak(subjectToken: string, username: string) {
+  //   const formData = new URLSearchParams();
+  //   formData.append(
+  //     'grant_type',
+  //     'urn:ietf:params:oauth:grant-type:token-exchange',
+  //   );
+  //   formData.append('subject_token', subjectToken); // o un dummy token
+  //   formData.append('client_id', 'gateway-service');
+  //   formData.append('client_secret', 'hwVjS9nDD4wfpnqVeXcU6gcky1iLY2hK');
+  //   formData.append('requested_subject', username); // o ID
+
+  //   const response = await firstValueFrom(
+  //     this.httpService.post(
+  //       'http://192.168.1.100:8080/realms/myrealm/protocol/openid-connect/token',
+  //       formData,
+  //       {
+  //         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  //       },
+  //     ),
+  //   );
+
+  //   return response.data;
+  // }
+  
 
   async verifyCiAndBirthdate(ci: string, birthdate: Date) {
     const formattedDate = birthdate.toISOString().split('T')[0]; // "YYYY-MM-DD"
