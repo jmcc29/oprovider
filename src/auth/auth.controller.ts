@@ -80,11 +80,9 @@ export class AuthController {
   }
 
   @Post('identify')
-  async identify(@Body() dto: IdentifyDto) {
-    const birthdate = new Date(dto.birthdate);
+  async identify(@Body() dto: LoginUserDto) {
 
-    const user = await this.authService.verifyCiAndBirthdate(dto.ci, birthdate);
-
+    const user = await this.authService.login(dto);
     if (!user) {
       throw new NotFoundException(
         'No se encontró un usuario con los datos proporcionados',

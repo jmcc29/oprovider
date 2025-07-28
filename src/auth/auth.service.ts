@@ -93,17 +93,4 @@ export class AuthService {
 
   //   return response.data;
   // }
-  
-
-  async verifyCiAndBirthdate(ci: string, birthdate: Date) {
-    const formattedDate = birthdate.toISOString().split('T')[0]; // "YYYY-MM-DD"
-
-    return this.userRepo
-      .createQueryBuilder('user')
-      .where('user.ci = :ci', { ci })
-      .andWhere("TO_CHAR(user.birthdate, 'YYYY-MM-DD') = :birthdate", {
-        birthdate: formattedDate,
-      })
-      .getOne();
-  }
 }

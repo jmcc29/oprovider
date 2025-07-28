@@ -34,7 +34,7 @@ export class AuthorizationController {
         <html>
           <body>
             <h2>Login con CI y Fecha de Nacimiento</h2>
-            <form method="GET" action="/authorize">
+            <form method="GET" action="/api/authorize">
               <input type="hidden" name="client_id" value="${query.client_id || ''}" />
               <input type="hidden" name="redirect_uri" value="${query.redirect_uri || ''}" />
               <input type="hidden" name="scope" value="${query.scope || ''}" />

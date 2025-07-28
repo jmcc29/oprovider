@@ -1,7 +1,7 @@
-import { Controller } from '@nestjs/common';
+import { Controller, NotFoundException } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
 import { AuthService } from './auth.service';
-import { LoginUserDto } from './dto';
+import { CreateUserDto, LoginUserDto, IdentifyDto } from './dto';
 
 @Controller()
 export class AuthNatsController {
@@ -15,10 +15,14 @@ export class AuthNatsController {
     return result; // { access_token: '...' }
   }
 
+  @MessagePattern('auth.register')
+  async create(@Payload() createUserDto: CreateUserDto) {
+    return this.authService.create(createUserDto);
+  }
+
   @MessagePattern('auth.identify')
-  async handleIdentify(@Payload() dto: any) {
-    const birthdate = new Date(dto.birthdate);
-    const user = await this.authService.verifyCiAndBirthdate(dto.ci, birthdate);
+  async handleIdentify(@Payload() dto: LoginUserDto) {
+    const user = await this.authService.login(dto);
 
     if (!user) return { error: 'Usuario no encontrado' };
 
