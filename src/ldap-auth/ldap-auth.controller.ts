@@ -7,7 +7,7 @@ import { LoginLdapAuthDto } from './dto';
 export class LdapAuthController {
   constructor(private readonly ldapAuthService: LdapAuthService) {}
 
-  @MessagePattern('ldap-auth.loginLdapKeycloak')
+  @MessagePattern('ldap-auth.login')
   create(@Payload() loginLdapDto: LoginLdapAuthDto) {
     return this.ldapAuthService.loginLdap(loginLdapDto);
   }
