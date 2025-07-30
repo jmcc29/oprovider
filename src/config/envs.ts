@@ -12,6 +12,8 @@ interface EnvVars {
   KEYCLOAK_REALM: string;
   KEYCLOAK_CLIENT_ID: string;
   KEYCLOAK_CLIENT_SECRET: string;
+  KEYCLOAK_ADMIN_USERNAME: string;
+  KEYCLOAK_ADMIN_PASSWORD: string;
   PORT: number;
   HOST_API: string;
   JWT_SECRET: string;
@@ -47,6 +49,8 @@ export const envs = {
     realm: envVars.KEYCLOAK_REALM,
     clientId: envVars.KEYCLOAK_CLIENT_ID,
     clientSecret: envVars.KEYCLOAK_CLIENT_SECRET,
+    username: envVars.KEYCLOAK_ADMIN_USERNAME,
+    password: envVars.KEYCLOAK_ADMIN_PASSWORD,
   },
   jwtSecret: envVars.JWT_SECRET,
 };
