@@ -47,6 +47,7 @@ export const envs = {
   keycloak: {
     url: envVars.KEYCLOAK_URL,
     realm: envVars.KEYCLOAK_REALM,
+    issuer: `${envVars.KEYCLOAK_URL}/realms/${envVars.KEYCLOAK_REALM}`,
     clientId: envVars.KEYCLOAK_CLIENT_ID,
     clientSecret: envVars.KEYCLOAK_CLIENT_SECRET,
     username: envVars.KEYCLOAK_ADMIN_USERNAME,

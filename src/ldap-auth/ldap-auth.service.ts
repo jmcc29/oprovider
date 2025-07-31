@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { EvaluatePermissionDto, LoginLdapAuthDto } from './dto';
+import { EvaluatePermissionDto, LoginLdapAuthDto, ValidateTokenDto } from './dto';
 import { firstValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { envs } from '../config';
@@ -19,7 +19,7 @@ export class LdapAuthService {
 
     const response = await firstValueFrom(
       this.http.post(
-        `${envs.keycloak.url}/realms/${envs.keycloak.realm}/protocol/openid-connect/token`,
+        `${envs.keycloak.issuer}/protocol/openid-connect/token`,
         body.toString(),
         {
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -31,6 +31,14 @@ export class LdapAuthService {
   loginLdap(loginLdapDto: LoginLdapAuthDto) {
     const { username, password } = loginLdapDto;
     return this.getKeycloakToken(username, password);
+  }
+  async validateTokenKeycloak(accessToken: ValidateTokenDto): Promise<boolean> {
+    try {
+      return true;
+    } catch (error) {
+      console.error('❌ Error al validar token en Keycloak:', error.message);
+      return false;
+    }
   }
 
   async evaluatePermissionKeycloak({
@@ -47,7 +55,7 @@ export class LdapAuthService {
     try {
       const res = await firstValueFrom(
         this.http.post(
-          `${envs.keycloak.url}/realms/${envs.keycloak.realm}/protocol/openid-connect/token`,
+          `${envs.keycloak.issuer}/protocol/openid-connect/token`,
           // form,
           body.toString(),
           {
