@@ -14,7 +14,7 @@ export class LdapAuthController {
 
   @MessagePattern('ldap-auth.validateToken')
   validateToken(@Payload() dto: ValidateTokenDto ) {
-    return this.ldapAuthService.validateTokenKeycloak(dto);
+    return this.ldapAuthService.validateToken(dto);
   }
   
   @MessagePattern('ldap-auth.evaluatePermission')

@@ -1,12 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { EvaluatePermissionDto, LoginLdapAuthDto, ValidateTokenDto } from './dto';
+import {
+  EvaluatePermissionDto,
+  LoginLdapAuthDto,
+  ValidateTokenDto,
+} from './dto';
 import { firstValueFrom } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
 import { envs } from '../config';
+import { KeycloakClientService } from 'src/keycloak/keycloak-client.service';
 
 @Injectable()
 export class LdapAuthService {
-  constructor(private readonly http: HttpService) {}
+  constructor(
+    private readonly http: HttpService,
+    private readonly keycloakClient: KeycloakClientService,
+  ) {}
   async getKeycloakToken(username: string, password: string) {
     const body = new URLSearchParams({
       client_id: envs.keycloak.clientId,
@@ -32,15 +40,9 @@ export class LdapAuthService {
     const { username, password } = loginLdapDto;
     return this.getKeycloakToken(username, password);
   }
-  async validateTokenKeycloak(accessToken: ValidateTokenDto): Promise<boolean> {
-    try {
-      return true;
-    } catch (error) {
-      console.error('❌ Error al validar token en Keycloak:', error.message);
-      return false;
-    }
+  async validateToken(accessToken: ValidateTokenDto) {
+    return this.keycloakClient.validateTokenKeycloak(accessToken.accessToken);
   }
-
   async evaluatePermissionKeycloak({
     accessToken,
     resource,
@@ -70,10 +72,7 @@ export class LdapAuthService {
       // Asegura que haya algo que retornar
       return res.data?.result === true;
     } catch (error) {
-      console.error(
-        '❌ Error al evaluar permiso en Keycloak:',
-        error?.response?.data || error.message,
-      );
+      console.error(error?.response?.data || error.message);
       return false;
     }
   }
