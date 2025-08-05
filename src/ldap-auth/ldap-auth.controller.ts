@@ -19,6 +19,6 @@ export class LdapAuthController {
   
   @MessagePattern('ldap-auth.evaluatePermission')
   evaluatePermission(@Payload() dto: EvaluatePermissionDto) {
-    return this.ldapAuthService.evaluatePermissionKeycloak(dto);
+    return this.ldapAuthService.evaluatePermission(dto);
   }
 }

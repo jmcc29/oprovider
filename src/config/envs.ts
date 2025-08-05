@@ -52,6 +52,10 @@ export const envs = {
     clientSecret: envVars.KEYCLOAK_CLIENT_SECRET,
     username: envVars.KEYCLOAK_ADMIN_USERNAME,
     password: envVars.KEYCLOAK_ADMIN_PASSWORD,
+    endpoint: {
+      token: `${envVars.KEYCLOAK_URL}/realms/${envVars.KEYCLOAK_REALM}/protocol/openid-connect/token`,
+      certs: `${envVars.KEYCLOAK_URL}/realms/${envVars.KEYCLOAK_REALM}/protocol/openid-connect/certs`,
+    }
   },
   jwtSecret: envVars.JWT_SECRET,
 };
